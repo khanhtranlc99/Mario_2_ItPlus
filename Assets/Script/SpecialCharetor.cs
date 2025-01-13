@@ -2,17 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpecialCharetor : MonoBehaviour
+public class SpecialCharetor : CharectorBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+
+    public override void Init()
     {
-        
+
+    }
+    public override void Hit(HitType hitType)
+    {
+        switch (hitType)
+        {
+            case HitType.RedMusrom:
+                Debug.Log("debug.log");
+                break;
+            case HitType.Flower:
+                Debug.Log("debug.log");
+                break;
+            case HitType.Enemy:
+                GamePlaycontroller.instance.ChangeCharector(CharectorType.Big);
+                break;
+            case HitType.DieZone:
+                Die();
+                break;
+        }
     }
 }

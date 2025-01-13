@@ -9,6 +9,16 @@ public enum ActionType
     Right, 
     Jump
 }
+public enum HitType
+{
+    RedMusrom,
+    GreenMusrom,
+    Star,
+    Flower,
+    Enemy,
+    Brick,
+    DieZone
+}
 
 public abstract class CharectorBase : MonoBehaviour
 {
@@ -20,10 +30,11 @@ public abstract class CharectorBase : MonoBehaviour
     public bool groundCheck;
   
     public abstract void Init();
-    public abstract void Hit();
+    public abstract void Hit(HitType hitType);
     public virtual void Die()
     {
-
+        GamePlaycontroller.instance.ChangeCharector(CharectorType.Small);
+        GamePlaycontroller.instance.HandleSetCurrentToFirstPossition();
     }
 
     private void Update()
@@ -36,16 +47,32 @@ public abstract class CharectorBase : MonoBehaviour
         {
             Move(ActionType.Right);
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Move(ActionType.Jump);
         }
         
-        if(!Input.anyKey)
+        if(!Input.anyKey )
         {
-            rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
-            animator.Play("Idle");
+            if(groundCheck) // cham dat
+            {
+                rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
+                animator.Play("Idle");
+            }
+            else
+            {
+                animator.Play("Jump");
+            }
+            
+       
         }
+        if (!groundCheck)
+        {
+            animator.Play("Jump");
+        }
+
+
+
 
     }
 
@@ -62,18 +89,33 @@ public abstract class CharectorBase : MonoBehaviour
               
                     rigidbody2D.velocity = new Vector2(-speed, rigidbody2D.velocity.y) ;
                     spriteRender.transform.localScale = new Vector3(-1, 1, 1);
+                if(groundCheck)
+                {
                     animator.Play("Move");
+                }
+                else
+                {
+                    animator.Play("Jump");
+                }
+                  
              
                 break;
             case ActionType.Right:
                 rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y) ;
                 spriteRender.transform.localScale = new Vector3(1, 1, 1);
-                animator.Play("Move");
+                if (groundCheck)
+                {
+                    animator.Play("Move");
+                }
+                else
+                {
+                    animator.Play("Jump");
+                }
                 break;
             case ActionType.Jump:
 
                     animator.Play("Jump");
-                    rigidbody2D.AddForce(new Vector2(rigidbody2D.velocity.x, 2 * jumpForce) );
+                    rigidbody2D.AddForce(new Vector2(rigidbody2D.velocity.x, 2 * jumpForce), ForceMode2D.Impulse     );
                    
                
                 break;
