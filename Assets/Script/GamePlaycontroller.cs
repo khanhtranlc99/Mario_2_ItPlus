@@ -22,16 +22,28 @@ public class GamePlaycontroller : MonoBehaviour
     [SerializeField] private Transform firtPost;
     [SerializeField] private ProCamera2D camera2D;
 
+    [SerializeField] private List<GameObject> lsLevelData;
 
+    public LevelData levelData;
+    public GameObject winPanel;
+    public GameObject losePanel;
     private void Awake()
     {
         instance = this;
     }
     private void Start()
     {
-        currentCharector = Instantiate(smallCharectorPrefab);
-        currentCharector.transform.position = firtPost.position;
-        camera2D.AddCameraTarget(currentCharector.transform);
+        Debug.LogError("CurrentLevel" + PlayerPrefs.GetInt("CurrentLevel", 1));
+        var levelObj = Resources.Load<GameObject>("Level_" + PlayerPrefs.GetInt("CurrentLevel", 1));
+        if(levelObj != null)
+        {
+            levelData = Instantiate(levelObj).GetComponent<LevelData>();
+            firtPost = levelData.firstPost;
+            currentCharector = Instantiate(smallCharectorPrefab);
+            currentCharector.transform.position = firtPost.position;
+            camera2D.AddCameraTarget(currentCharector.transform);
+        }    
+     
     }
 
 

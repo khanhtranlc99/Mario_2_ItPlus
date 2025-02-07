@@ -22,6 +22,7 @@ public enum HitType
 
 public abstract class CharectorBase : MonoBehaviour
 {
+    public CharectorType CharectorType;
     public Animator animator;
     public SpriteRenderer spriteRender;
     public Rigidbody2D rigidbody2D;
@@ -69,6 +70,17 @@ public abstract class CharectorBase : MonoBehaviour
         if (!groundCheck)
         {
             animator.Play("Jump");
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                spriteRender.transform.localScale = new Vector3(-1, 1, 1);
+                rigidbody2D.velocity = new Vector2(-speed, rigidbody2D.velocity.y);
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                spriteRender.transform.localScale = new Vector3(1, 1, 1);
+                rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y);
+            }
+
         }
 
 

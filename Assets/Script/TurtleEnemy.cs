@@ -1,33 +1,34 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
-public class BrownEnemy : MonoBehaviour
+public class TurtleEnemy : MonoBehaviour
 {
+    public Animator animator;
     public Transform postA;
     public Transform postB;
     bool isAction = false;
+    public GameObject shellObj;
 
-    public SpriteRenderer spriteRenderer;
-    public Sprite normalSprite;
-    public Sprite diaSprite;
 
 
     private void Start()
     {
-        spriteRenderer.sprite = normalSprite;
+        animator.Play("Move");
         Move();
     }
 
     private void Move()
     {
- 
+
+        this.transform.localScale = new Vector3(1,1,1);
         this.transform.DOMoveX(postA.transform.position.x, 10).SetEase(Ease.Linear).OnComplete(delegate
         {
-            if(postB != null)
+            if (postB != null)
             {
-                this.transform.DOMoveX(postB.transform.position.x, 4).OnComplete(delegate
+                this.transform.localScale = new Vector3(-1, 1, 1);
+                this.transform.DOMoveX(postB.transform.position.x, 10).OnComplete(delegate
                 {
                     Move();
 
@@ -43,11 +44,16 @@ public class BrownEnemy : MonoBehaviour
             if (!isAction)
             {
                 isAction = true;
-                spriteRenderer.sprite = diaSprite;
-              
+          
+
                 this.transform.DOKill();
-                this.transform.position -= new Vector3(0, 0.25f, 0);
-                //Destroy(this.gameObject);
+                this.transform.position -= new Vector3(0, 0.15f, 0);
+                this.gameObject.SetActive(false);
+                var shell = Instantiate(shellObj);
+
+                shell.transform.position = this.transform.position;
+
+
             }
 
 
@@ -59,10 +65,12 @@ public class BrownEnemy : MonoBehaviour
             {
                 isAction = true;
                 GamePlaycontroller.instance.currentCharector.Hit(HitType.Enemy);
-               
+
             }
 
 
         }
     }
+
+
 }
