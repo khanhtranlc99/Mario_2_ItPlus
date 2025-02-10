@@ -82,4 +82,31 @@ public class GamePlaycontroller : MonoBehaviour
         currentCharector.transform.position = firtPost.position;
     }
 
+    public void MoveLeft()
+    {
+        currentCharector.isLeft = true;
+     
+    }
+    public void MoveRight()
+    {
+     
+        currentCharector.isRight = true;
+    }
+
+
+    public void OffLeft()
+    {
+        currentCharector.isLeft = false;
+
+    }
+    public void OffRight()
+    {
+        currentCharector.isRight = false;
+
+    }
+
+    public void Jump()
+    {
+        currentCharector.Move(ActionType.Jump);
+    }
 }

@@ -38,24 +38,30 @@ public abstract class CharectorBase : MonoBehaviour
         GamePlaycontroller.instance.HandleSetCurrentToFirstPossition();
     }
 
+    public bool isLeft;
+    public bool isRight;
+
     private void Update()
     {
-        if(Input.GetKey(KeyCode.LeftArrow))
+#if UNITY_ANDROID
+        if (isLeft)
         {
             Move(ActionType.Left);
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (isRight)
         {
             Move(ActionType.Right);
         }
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Move(ActionType.Jump);
         }
-        
-        if(!Input.anyKey )
+
+        if (!isLeft && !isRight)
         {
-            if(groundCheck) // cham dat
+            if (groundCheck) // cham dat
             {
                 rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
                 animator.Play("Idle");
@@ -64,8 +70,6 @@ public abstract class CharectorBase : MonoBehaviour
             {
                 animator.Play("Jump");
             }
-            
-       
         }
         if (!groundCheck)
         {
@@ -82,7 +86,48 @@ public abstract class CharectorBase : MonoBehaviour
             }
 
         }
+#elif UNITY_STANDALONE_WIN
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            Move(ActionType.Left);
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Move(ActionType.Right);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Move(ActionType.Jump);
+        }
 
+        if (!Input.anyKey)
+        {
+            if (groundCheck) // cham dat
+            {
+                rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
+                animator.Play("Idle");
+            }
+            else
+            {
+                animator.Play("Jump");
+            }
+        }
+        if (!groundCheck)
+        {
+            animator.Play("Jump");
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                spriteRender.transform.localScale = new Vector3(-1, 1, 1);
+                rigidbody2D.velocity = new Vector2(-speed, rigidbody2D.velocity.y);
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                spriteRender.transform.localScale = new Vector3(1, 1, 1);
+                rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y);
+            }
+
+        }
+#endif
 
 
 
